@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+
+  uaa:
+    image: cloudfoundry/uaa:75.1.0
+    container_name: uaa
+    depends_on:
+      - postgres
+    ports:
+      - "8090:8080"
+    environment:
+      UAA_CONFIG_PATH: /uaa
+      spring_profiles: default,postgresql
+    volumes:
+      - ./uaa-server/uaa.yml:/uaa/uaa.yml
+
+  postgres:
+    container_name: postgres
+    restart: always
+    image: 'postgres:11.4'
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: '12345'
+#

@@ -1,0 +1,6 @@
+fullnameOverride: postgres
+postgresqlUsername: postgres
+postgresqlPassword: "12345"
+postgresqlDatabase: postgres
+
+postgresqlSharedPreloadLibraries: pgaudit,pg_stat_statements

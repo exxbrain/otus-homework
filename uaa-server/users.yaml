@@ -1,0 +1,216 @@
+openapi: 3.0.0
+info:
+  description: |
+    This is simple client API
+  version: "1.0.0"
+  title: User Service
+  contact:
+    email: exxbrain@gmail.com
+servers:
+  - description: K8S
+    url: http://arch.homework/otusapp/dzakharov/auth
+  - description: Local
+    url: http://localhost:8090
+  - description: SwaggerHub API Auto Mocking
+    url: https://08cb70ab-82ba-46ab-bf3c-a8d424f3cc7d.mock.pstmn.io
+tags:
+  - name: user
+    description: Operations about user
+paths:
+  /Users:
+    post:
+      tags:
+        - user
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      security:
+        - OAuth2:
+            - uaa.admin
+      responses:
+        '201':
+          description: user response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            examples:
+              sample-user:
+                summary: Example
+                value:
+                  userName: johndoe5891
+                  password: pwdpwd
+                  name:
+                    givenName: John
+                    familyName: Doe
+                  emails:
+                    - value: bestjohn@doe.com
+                      primary: true
+                  phoneNumbers:
+                    - value: '+71002003040'
+
+        description: Created user object
+        required: true
+  /user/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        description: ID of user
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags:
+        - user
+      description: Returns a user based on a single ID, if the user does not have access to the user
+      operationId: find user by id
+      responses:
+        '200':
+          description: user response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - user
+      description: deletes a single user based on the ID supplied
+      operationId: deleteUser
+      responses:
+        '204':
+          description: user deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - user
+      description: Update user with User ID supplied
+      operationId: updateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            examples:
+              sample-user:
+                summary: Example
+                value:
+                  name:
+                    givenName: Julie
+                    familyName: Doe
+                  emails:
+                    - value: bestjohn@doe1.com
+                      primary: true
+                  phoneNumbers:
+                    - value: '+71004242424'
+
+      responses:
+        '200':
+          description: user updated
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        password:
+          tokenUrl: http://localhost:8090/oauth/token
+          scopes:
+            read: Grants read access
+            write: Grants write access
+            uaa.admin: Grants read and write access to administrative information
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userName:
+          type: string
+          maxLength: 256
+        password:
+          type: string
+          format: password
+        name:
+          type: object
+          properties:
+            givenName:
+              type: string
+              maxLength: 256
+            familyName:
+              type: string
+              maxLength: 256
+        emails:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                format: email
+              primary:
+                type: boolean
+        phoneNumbers:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                format: phone
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+
+  requestBodies:
+    UserArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+      description: List of user object
+      required: true
+
+security:
+  - OAuth2:
+      - read
+      - write

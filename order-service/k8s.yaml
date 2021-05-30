@@ -1,0 +1,56 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: order-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service-deployment
+  namespace: order-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+        version: "0.0.3"
+    spec:
+      containers:
+      - name: order-service
+        image: exxbrain/order-service
+        ports:
+          - name: web
+            containerPort: 80
+        readinessProbe:
+          httpGet:
+            port: web
+            path: /actuator/health/readiness
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            port: web
+            path: /actuator/health/liveness
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+  namespace: order-service
+spec:
+  type: ClusterIP
+  selector:
+    app: order-service
+  ports:
+  - name: web
+    port: 80
+    targetPort: 80
+

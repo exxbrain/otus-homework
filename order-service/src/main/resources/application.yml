@@ -1,0 +1,25 @@
+server:
+  port: ${PORT:80}
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+
+info:
+  app:
+    name: Order Service
+    version: ${VERSION}
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"

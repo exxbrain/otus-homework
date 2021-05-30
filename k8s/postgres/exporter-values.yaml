@@ -1,0 +1,9 @@
+serviceMonitor:
+  enabled: true
+
+config:
+  datasource:
+    host: postgres
+    user: postgres
+    password: "12345"
+  excludeDatabases: []
