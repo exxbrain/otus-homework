@@ -6,6 +6,7 @@ on:
       - 'main'
     paths:
       - 'uaa-server/**'
+      - '.github/workflows/ci-uaa.yaml'
 
 jobs:
   docker:
