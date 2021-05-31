@@ -23,7 +23,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: uaa-server/.
-          load: true
           push: true
           tags: exxbrain/uaa:latest
       -
