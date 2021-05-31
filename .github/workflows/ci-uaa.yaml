@@ -23,8 +23,8 @@ jobs:
         with:
           context: uaa-server/.
           load: true
+          push: true
           tags: exxbrain/uaa:latest
       -
-        name: Inspect
-        run: |
-          docker image inspect exxbrain/uaa:latest
+        name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
