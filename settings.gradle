@@ -1,5 +1,4 @@
-rootProject.name = 'sample-gateway-oauth2login'
+rootProject.name = 'otus-homework'
 
 include 'gateway'
-include 'resource-server'
 include 'uaa-server'
