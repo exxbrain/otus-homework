@@ -3,7 +3,7 @@ server:
 
 logging:
   level:
-    root: TRACE
+    root: DEBUG
     org.springframework.web: INFO
     org.springframework.security: TRACE
     org.springframework.security.oauth2: TRACE
@@ -17,6 +17,8 @@ management:
       enabled: true
     health:
       show-details: always
+    gateway:
+      enabled: true
   endpoints:
     web:
       exposure:
@@ -42,12 +44,15 @@ spring:
             user-info-uri: "${AUTH_URL}/realms/arch/protocol/openid-connect/userinfo"
             user-name-attribute: "preferred_username"
             jwk-set-uri: "${AUTH_URL}/realms/arch/protocol/openid-connect/certs"
+      resourceserver:
+        jwt:
+          issuer-uri: "${AUTH_URL}/realms/arch"
 
   cloud:
     gateway:
       default-filters:
         - PrefixPath=/
-        - TokenRelay=
+        - TokenRelay
         - RemoveRequestHeader=Cookie
         - AddResponseHeader=X-Response-Default-Foo, Default-Bar
 
@@ -67,6 +72,6 @@ spring:
           uri: ${ORDERS_URI}
           order: 10000
           predicates:
-            - Path=/orders/**
+          - Path=/orders/**
   jmx:
     enabled: false
