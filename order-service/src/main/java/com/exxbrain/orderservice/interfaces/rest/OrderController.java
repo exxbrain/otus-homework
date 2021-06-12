@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -36,9 +37,9 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createOrder(@RequestBody CreateOrderDto dto) {
+    public void createOrder(@RequestBody CreateOrderDto dto, JwtAuthenticationToken token) {
         commandGateway.sendAndWait(
-                new CreateOrderCommand(dto.getId(), "customer-test", orderItems(dto))
+                new CreateOrderCommand(dto.getId(), token.getToken().getSubject(), orderItems(dto))
         );
     }
 

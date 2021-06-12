@@ -2,6 +2,7 @@ package com.exxbrain.orderservice.config;
 
 import com.nimbusds.jose.shaded.json.JSONArray;
 import com.nimbusds.jose.shaded.json.JSONObject;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -41,25 +42,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter() {
-        JwtGrantedAuthoritiesConverter delegate = new JwtGrantedAuthoritiesConverter();
+        var delegate = new JwtGrantedAuthoritiesConverter();
 
-        return jwt -> {
-            Collection<GrantedAuthority> grantedAuthorities = delegate.convert(jwt);
+        //noinspection Convert2Lambda
+        return new Converter<>() {
+            @Override
+            public Collection<GrantedAuthority> convert(@NotNull Jwt jwt) {
+                var grantedAuthorities = delegate.convert(jwt);
 
-            if (jwt.getClaim("realm_access") == null) {
+                if (jwt.getClaim("realm_access") == null) {
+                    return grantedAuthorities;
+                }
+                var realmAccess = (JSONObject) jwt.getClaim("realm_access");
+                if (realmAccess.get("roles") == null) {
+                    return grantedAuthorities;
+                }
+                var roles = (JSONArray) realmAccess.get("roles");
+
+                final var keycloakAuthorities = roles.stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toList());
+                grantedAuthorities.addAll(keycloakAuthorities);
+
                 return grantedAuthorities;
             }
-            var realmAccess = (JSONObject) jwt.getClaim("realm_access");
-            if (realmAccess.get("roles") == null) {
-                return grantedAuthorities;
-            }
-            var roles = (JSONArray) realmAccess.get("roles");
-
-            final var keycloakAuthorities = roles.stream()
-                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toList());
-            grantedAuthorities.addAll(keycloakAuthorities);
-
-            return grantedAuthorities;
         };
     }
 }
