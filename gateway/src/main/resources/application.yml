@@ -36,7 +36,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: "${AUTH_URL}/realms/arch"
+          issuer-uri: "${ISSUER_URL}/realms/arch"
+          jwk-set-uri: "${AUTH_URL}/realms/arch/protocol/openid-connect/certs"
       client:
         registration:
           gateway:
