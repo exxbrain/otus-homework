@@ -84,7 +84,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							""
+							"pm.collectionVariables.set('adminUsername', 'admin'+pm.variables.replaceIn('{{$randomInt}}'));"
 						],
 						"type": "text/javascript"
 					}
@@ -93,7 +93,25 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							""
+							"pm.sendRequest({",
+							"    method: 'POST',",
+							"    url: pm.collectionVariables.get(\"baseUrl\") + '/auth/realms/arch/protocol/openid-connect/token',",
+							"    ",
+							"    body: {",
+							"        mode: 'urlencoded',",
+							"        urlencoded: [",
+							"            {key: \"grant_type\", value: \"password\", disabled: false},",
+							"            {key: \"username\", value: pm.collectionVariables.get(\"adminUsername\"), disabled: false},",
+							"            {key: \"password\", value: pm.collectionVariables.get(\"adminPassword\"), disabled: false},",
+							"            {key: \"scope\", value: \"email profile\", disabled: false},",
+							"            {key: \"client_id\", value: \"gateway\", disabled: false},",
+							"        ]",
+							"    }",
+							"}, (err, response) => {",
+							"    const jsonResponse = response.json();",
+							"    const newAccessToken = jsonResponse.access_token;",
+							"    pm.collectionVariables.set('adminToken', newAccessToken);",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -119,7 +137,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\":\"{{$randomFirstName}}\",\n    \"lastName\":\"{{$randomLastName}}\", \n    \"username\":\"{{adminUsername}}\",\n    \"email\":\"{{adminUsername}}@gmail.com\", \n    \"enabled\":\"true\",\n    \"credentials\":[\n        {\n            \"type\":\"password\",\n            \"value\":\"pwd\",\n            \"temporary\":false\n        }\n    ],\n    \"groups\":[\n        \"admin\"\n    ]\n}",
+					"raw": "{\n    \"firstName\":\"{{$randomFirstName}}\",\n    \"lastName\":\"{{$randomLastName}}\", \n    \"username\":\"{{adminUsername}}\",\n    \"email\":\"{{adminUsername}}@gmail.com\", \n    \"enabled\":\"true\",\n    \"credentials\":[\n        {\n            \"type\":\"password\",\n            \"value\":\"{{adminPassword}}\",\n            \"temporary\":false\n        }\n    ],\n    \"groups\":[\n        \"admin\"\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -149,7 +167,34 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							""
+							"pm.collectionVariables.set('userUsername', 'user'+pm.variables.replaceIn('{{$randomInt}}'));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.sendRequest({",
+							"    method: 'POST',",
+							"    url: pm.collectionVariables.get(\"baseUrl\") + '/auth/realms/arch/protocol/openid-connect/token',",
+							"    ",
+							"    body: {",
+							"        mode: 'urlencoded',",
+							"        urlencoded: [",
+							"            {key: \"grant_type\", value: \"password\", disabled: false},",
+							"            {key: \"username\", value: pm.collectionVariables.get(\"userUsername\"), disabled: false},",
+							"            {key: \"password\", value: pm.collectionVariables.get(\"userPassword\"), disabled: false},",
+							"            {key: \"scope\", value: \"email profile\", disabled: false},",
+							"            {key: \"client_id\", value: \"gateway\", disabled: false},",
+							"        ]",
+							"    }",
+							"}, (err, response) => {",
+							"    const jsonResponse = response.json();",
+							"    const newAccessToken = jsonResponse.access_token;",
+							"    pm.collectionVariables.set('userToken', newAccessToken);",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -175,7 +220,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\":\"{{$randomFirstName}}\",\n    \"lastName\":\"{{$randomLastName}}\",\n    \"username\":\"{{userUsername}}\",\n    \"email\":\"{{userUsername}}@gmail.com\", \n    \"enabled\":\"true\",\n    \"credentials\":[\n        {\n            \"type\":\"password\",\n            \"value\":\"pwd\",\n            \"temporary\":false\n        }\n    ],\n    \"groups\":[\n        \"user\"\n    ]\n}",
+					"raw": "{\n    \"firstName\":\"{{$randomFirstName}}\",\n    \"lastName\":\"{{$randomLastName}}\",\n    \"username\":\"{{userUsername}}\",\n    \"email\":\"{{userUsername}}@gmail.com\", \n    \"enabled\":\"true\",\n    \"credentials\":[\n        {\n            \"type\":\"password\",\n            \"value\":\"{{userPassword}}\",\n            \"temporary\":false\n        }\n    ],\n    \"groups\":[\n        \"user\"\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -405,15 +450,25 @@
 		{
 			"name": "Get Orders",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{adminToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/orders/",
+					"raw": "http://localhost:8082/orders/",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8081",
+					"port": "8082",
 					"path": [
 						"orders",
 						""
@@ -511,9 +566,6 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"pm.collectionVariables.set('adminUsername', 'admin'+pm.variables.replaceIn('{{$randomInt}}'));",
-					"pm.collectionVariables.set('userUsername', 'user'+pm.variables.replaceIn('{{$randomInt}}'));",
-					"",
 					"pm.sendRequest({",
 					"    method: 'POST',",
 					"    url: pm.collectionVariables.get(\"baseUrl\") + '/auth/realms/master/protocol/openid-connect/token',",
@@ -533,6 +585,46 @@
 					"    const jsonResponse = response.json();",
 					"    const newAccessToken = jsonResponse.access_token;",
 					"    pm.collectionVariables.set('authServerAdminToken', newAccessToken);",
+					"});",
+					"",
+					"pm.sendRequest({",
+					"    method: 'POST',",
+					"    url: pm.collectionVariables.get(\"baseUrl\") + '/auth/realms/arch/protocol/openid-connect/token',",
+					"    ",
+					"    body: {",
+					"        mode: 'urlencoded',",
+					"        urlencoded: [",
+					"            {key: \"grant_type\", value: \"password\", disabled: false},",
+					"            {key: \"username\", value: pm.collectionVariables.get(\"adminUsername\"), disabled: false},",
+					"            {key: \"password\", value: pm.collectionVariables.get(\"adminPassword\"), disabled: false},",
+					"            {key: \"scope\", value: \"email profile\", disabled: false},",
+					"            {key: \"client_id\", value: \"gateway\", disabled: false},",
+					"        ]",
+					"    }",
+					"}, (err, response) => {",
+					"    const jsonResponse = response.json();",
+					"    const newAccessToken = jsonResponse.access_token;",
+					"    pm.collectionVariables.set('adminToken', newAccessToken);",
+					"});",
+					"",
+					"pm.sendRequest({",
+					"    method: 'POST',",
+					"    url: pm.collectionVariables.get(\"baseUrl\") + '/auth/realms/arch/protocol/openid-connect/token',",
+					"    ",
+					"    body: {",
+					"        mode: 'urlencoded',",
+					"        urlencoded: [",
+					"            {key: \"grant_type\", value: \"password\", disabled: false},",
+					"            {key: \"username\", value: pm.collectionVariables.get(\"userUsername\"), disabled: false},",
+					"            {key: \"password\", value: pm.collectionVariables.get(\"userPassword\"), disabled: false},",
+					"            {key: \"scope\", value: \"email profile\", disabled: false},",
+					"            {key: \"client_id\", value: \"gateway\", disabled: false},",
+					"        ]",
+					"    }",
+					"}, (err, response) => {",
+					"    const jsonResponse = response.json();",
+					"    const newAccessToken = jsonResponse.access_token;",
+					"    pm.collectionVariables.set('userToken', newAccessToken);",
 					"});"
 				]
 			}
@@ -571,6 +663,22 @@
 		{
 			"key": "productId",
 			"value": ""
+		},
+		{
+			"key": "adminToken",
+			"value": ""
+		},
+		{
+			"key": "userToken",
+			"value": ""
+		},
+		{
+			"key": "adminPassword",
+			"value": "password"
+		},
+		{
+			"key": "userPassword",
+			"value": "password"
 		}
 	]
 }
