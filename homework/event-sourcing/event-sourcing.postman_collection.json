@@ -1,0 +1,576 @@
+{
+	"info": {
+		"_postman_id": "582ce261-7010-4273-b8cf-9f78cfa7e2bc",
+		"name": "event-sourcing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Auth Server Admin Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get Token\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    const newAccessToken = jsonData.access_token;",
+							"    pm.collectionVariables.set('authServerAdminToken', newAccessToken);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "adm",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "adm",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "email profile",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "admin-cli",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "secret",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/realms/master/protocol/openid-connect/token",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"master",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create an admin",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authServerAdminToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\":\"{{$randomFirstName}}\",\n    \"lastName\":\"{{$randomLastName}}\", \n    \"username\":\"{{adminUsername}}\",\n    \"email\":\"{{adminUsername}}@gmail.com\", \n    \"enabled\":\"true\",\n    \"credentials\":[\n        {\n            \"type\":\"password\",\n            \"value\":\"pwd\",\n            \"temporary\":false\n        }\n    ],\n    \"groups\":[\n        \"admin\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/admin/realms/arch/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"admin",
+						"realms",
+						"arch",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authServerAdminToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\":\"{{$randomFirstName}}\",\n    \"lastName\":\"{{$randomLastName}}\",\n    \"username\":\"{{userUsername}}\",\n    \"email\":\"{{userUsername}}@gmail.com\", \n    \"enabled\":\"true\",\n    \"credentials\":[\n        {\n            \"type\":\"password\",\n            \"value\":\"pwd\",\n            \"temporary\":false\n        }\n    ],\n    \"groups\":[\n        \"user\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/admin/realms/arch/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"admin",
+						"realms",
+						"arch",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create order",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set('orderId', pm.variables.replaceIn('{{$randomUUID}}'));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{orderId}}\",\n    \"items\": [\n        {\n            \"id\": \"{{$randomUUID}}\",\n            \"name\": \"{{$randomProduct}}\",\n            \"price\": \"{{$randomPrice}}\"\n        },\n        {\n            \"id\": \"{{$randomUUID}}\",\n            \"name\": \"{{$randomProduct}}\",\n            \"price\": \"{{$randomPrice}}\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get first product id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    var productId = jsonData.orderItems[0].productId;",
+							"    pm.expect(productId).to.not.null;",
+							"    pm.collectionVariables.set('productId', productId);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/orders/{{orderId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove item",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"productId\": \"{{productId}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/orders/{{orderId}}/removeItem",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"orders",
+						"{{orderId}}",
+						"removeItem"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Order",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/orders/{{orderId}}/cancel",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"orders",
+						"{{orderId}}",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create another order",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set('orderId', pm.variables.replaceIn('{{$randomUUID}}'));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{orderId}}\",\n    \"items\": [\n        {\n            \"id\": \"{{$randomUUID}}\",\n            \"name\": \"{{$randomProduct}}\",\n            \"price\": \"{{$randomPrice}}\"\n        },\n        {\n            \"id\": \"{{$randomUUID}}\",\n            \"name\": \"{{$randomProduct}}\",\n            \"price\": \"{{$randomPrice}}\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Order",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/orders/{{orderId}}/confirm",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"orders",
+						"{{orderId}}",
+						"confirm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/orders/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"orders",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Orders Sorded By Total ASC",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/orders/?sort=total",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"orders",
+						""
+					],
+					"query": [
+						{
+							"key": "sort",
+							"value": "total"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Orders Sorded By Total DESC",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/orders/?sort=total,DESC",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"orders",
+						""
+					],
+					"query": [
+						{
+							"key": "sort",
+							"value": "total,DESC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Cancelled Orders Sorded By Total",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/orders/?sort=total&state=CANCELLED",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"orders",
+						""
+					],
+					"query": [
+						{
+							"key": "sort",
+							"value": "total"
+						},
+						{
+							"key": "state",
+							"value": "CANCELLED"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.collectionVariables.set('adminUsername', 'admin'+pm.variables.replaceIn('{{$randomInt}}'));",
+					"pm.collectionVariables.set('userUsername', 'user'+pm.variables.replaceIn('{{$randomInt}}'));",
+					"",
+					"pm.sendRequest({",
+					"    method: 'POST',",
+					"    url: pm.collectionVariables.get(\"baseUrl\") + '/auth/realms/master/protocol/openid-connect/token',",
+					"    ",
+					"    body: {",
+					"        mode: 'urlencoded',",
+					"        urlencoded: [",
+					"            {key: \"grant_type\", value: \"password\", disabled: false},",
+					"            {key: \"username\", value: \"adm\", disabled: false},",
+					"            {key: \"password\", value: \"adm\", disabled: false},",
+					"            {key: \"scope\", value: \"email profile\", disabled: false},",
+					"            {key: \"client_id\", value: \"admin-cli\", disabled: false},",
+					"            {key: \"client_secret\", value: \"secret\", disabled: false}",
+					"        ]",
+					"    }",
+					"}, (err, response) => {",
+					"    const jsonResponse = response.json();",
+					"    const newAccessToken = jsonResponse.access_token;",
+					"    pm.collectionVariables.set('authServerAdminToken', newAccessToken);",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://arch.homework/otusapp/dzakharov"
+		},
+		{
+			"key": "authServerAdminToken",
+			"value": ""
+		},
+		{
+			"key": "userUsername",
+			"value": "user"
+		},
+		{
+			"key": "adminUsername",
+			"value": "admin"
+		},
+		{
+			"key": "orderId",
+			"value": ""
+		},
+		{
+			"key": "productId",
+			"value": ""
+		}
+	]
+}
