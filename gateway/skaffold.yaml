@@ -4,7 +4,7 @@ metadata:
   name: gateway
 build:
   artifacts:
-    - image: exxbrain/demo-gateway
+    - image: exxbrain/otus-gateway
       jib: {}
 deploy:
   helm:
@@ -15,4 +15,4 @@ deploy:
         chartPath: ../helm-charts/charts/gateway
         artifactOverrides:
           image:
-            name: exxbrain/demo-gateway
+            name: exxbrain/otus-gateway
