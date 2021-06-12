@@ -25,6 +25,8 @@ management:
         include: "*"
 
 spring:
+  application:
+    name: gateway
 
   security:
     oauth2:
@@ -50,27 +52,18 @@ spring:
 
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
       default-filters:
-        - PrefixPath=/
         - TokenRelay
         - RemoveRequestHeader=Cookie
         - AddResponseHeader=X-Response-Default-Foo, Default-Bar
 
       routes:
         # =====================================
-        # to run server
-        # $ wscat --listen 9000
-        # to run client
-        # $ wscat --connect ws://localhost:8080/echo
-        - id: websocket_test
-          uri: ws://localhost:9000
-          order: 9000
-          predicates:
-            - Path=/echo
-        # =====================================
         - id: orders
-          uri: ${ORDERS_URI}
-          order: 10000
+          uri: "lb://order-service"
           predicates:
           - Path=/orders/**
   jmx:

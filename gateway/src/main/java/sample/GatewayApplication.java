@@ -1,9 +1,8 @@
 package sample;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.gateway.filter.factory.TokenRelayGatewayFilterFactory;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -16,6 +15,7 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 @RestController
+@EnableEurekaClient
 @SpringBootApplication
 public class GatewayApplication {
 
