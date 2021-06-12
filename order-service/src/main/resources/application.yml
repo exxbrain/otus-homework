@@ -6,7 +6,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: "${AUTH_URL}/realms/arch"
+          issuer-uri: "${ISSUER_URL:${AUTH_URL}}/realms/arch"
+          jwk-set-uri: "${AUTH_URL}/realms/arch/protocol/openid-connect/certs"
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     show-sql: true
