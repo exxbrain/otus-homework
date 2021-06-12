@@ -257,6 +257,16 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -463,15 +473,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8082/orders/",
+					"raw": "http://localhost:8082/orders",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8082",
 					"path": [
-						"orders",
-						""
+						"orders"
 					]
 				}
 			},
@@ -557,7 +566,64 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Get Cancelled Orders Sorded By Total",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/orders/?sort=total&state=CANCELLED",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"orders",
+								""
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "total"
+								},
+								{
+									"key": "state",
+									"value": "CANCELLED"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 12 Jun 2021 11:20:44 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": \"0a562b01-4a5b-4ed1-a3c2-0e70c6c57d4e\",\n        \"state\": \"CANCELLED\",\n        \"customerId\": \"customer-test\",\n        \"createdAt\": \"2021-06-12T08:15:44.615+00:00\",\n        \"total\": 68.41,\n        \"orderItems\": [\n            {\n                \"productId\": \"4af2faca-fc6b-4c17-bde5-1562e2f73392\",\n                \"productName\": \"Car\",\n                \"quantity\": 1,\n                \"price\": 22.22\n            },\n            {\n                \"productId\": \"4b625445-24f2-4adb-89c4-54b2a539936c\",\n                \"productName\": \"Shirt\",\n                \"quantity\": 1,\n                \"price\": 46.19\n            }\n        ]\n    }\n]"
+				}
+			]
 		}
 	],
 	"event": [

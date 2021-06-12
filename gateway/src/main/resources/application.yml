@@ -25,6 +25,10 @@ management:
         include: "*"
 
 spring:
+
+  config:
+    import: "file:${CONFIG_FILE:/config/routes.yaml}"
+
   application:
     name: gateway
 
@@ -49,22 +53,5 @@ spring:
             user-info-uri: "${AUTH_URL}/realms/arch/protocol/openid-connect/userinfo"
             user-name-attribute: "preferred_username"
             jwk-set-uri: "${AUTH_URL}/realms/arch/protocol/openid-connect/certs"
-
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-      default-filters:
-        - TokenRelay
-        - RemoveRequestHeader=Cookie
-        - AddResponseHeader=X-Response-Default-Foo, Default-Bar
-
-      routes:
-        # =====================================
-        - id: orders
-          uri: "lb://order-service"
-          predicates:
-          - Path=/orders/**
   jmx:
     enabled: false

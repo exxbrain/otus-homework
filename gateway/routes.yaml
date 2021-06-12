@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      default-filters:
+        - TokenRelay
+        - RemoveRequestHeader=Cookie
+        - AddResponseHeader=X-Response-Default-Foo, Default-Bar
+
+      routes:
+        # =====================================
+        - id: orders
+          uri: "lb://order-service"
+          predicates:
+            - Path=/orders/**
