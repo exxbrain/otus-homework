@@ -4,7 +4,6 @@ import com.exxbrain.orderservice.domain.command.*;
 import com.exxbrain.orderservice.domain.model.OrderItem;
 import com.exxbrain.orderservice.domain.model.OrderItems;
 import com.exxbrain.orderservice.domain.model.OrderRevision;
-import com.exxbrain.orderservice.domain.model.OrderState;
 import com.exxbrain.orderservice.domain.projections.OrderView;
 import com.exxbrain.orderservice.domain.queries.OrderListQuery;
 import com.exxbrain.orderservice.domain.queries.OrderQuery;
@@ -15,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -88,6 +88,7 @@ public class OrderController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('admin')")
     public Future<List<OrderView>> getOrders(@RequestParam(required = false) String state,
                                              @PageableDefault(size = 50,
                                                      sort = "createdAt",

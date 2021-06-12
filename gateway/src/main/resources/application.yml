@@ -30,6 +30,9 @@ spring:
 
   security:
     oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: "${AUTH_URL}/realms/arch"
       client:
         registration:
           gateway:
@@ -46,9 +49,6 @@ spring:
             user-info-uri: "${AUTH_URL}/realms/arch/protocol/openid-connect/userinfo"
             user-name-attribute: "preferred_username"
             jwk-set-uri: "${AUTH_URL}/realms/arch/protocol/openid-connect/certs"
-      resourceserver:
-        jwt:
-          issuer-uri: "${AUTH_URL}/realms/arch"
 
   cloud:
     gateway:
