@@ -1,13 +1,18 @@
 server:
   port: 80
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://localhost:8761}
+
 logging:
   level:
     root: DEBUG
-    org.springframework.web: INFO
-    org.springframework.security: TRACE
-    org.springframework.security.oauth2: TRACE
-    org.springframework.cloud.gateway: TRACE
+#    org.springframework.web: INFO
+#    org.springframework.security: TRACE
+#    org.springframework.security.oauth2: TRACE
+#    org.springframework.cloud.gateway: TRACE
 
 management:
   endpoint:
