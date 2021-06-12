@@ -15,7 +15,7 @@ servers:
     url: https://08cb70ab-82ba-46ab-bf3c-a8d424f3cc7d.mock.pstmn.io
 tags:
   - name: user
-    description: Operations about user
+    description: User related operations
 paths:
   /Users:
     post:

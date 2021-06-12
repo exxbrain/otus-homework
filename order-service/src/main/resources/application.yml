@@ -1,6 +1,23 @@
 server:
   port: ${PORT:80}
 
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    show-sql: true
+    properties:
+      javax:
+        persistence:
+          schema-generation:
+            create-source: metadata
+            scripts:
+              action: create
+              create-target: create.sql
+  application:
+    name: order-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/order?user=postgres&password=12345
+
 logging:
   level:
     root: INFO

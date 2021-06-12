@@ -1,0 +1,188 @@
+openapi: 3.0.0
+info:
+  description: |
+    This is simple client API
+  version: "1.0.0"
+  title: User Service
+  contact:
+    email: exxbrain@gmail.com
+servers:
+  - description: Localhost
+    url: http://localhost:8090
+  - description: K8S
+    url: http://arch.homework/otusapp/dzakharov/orders
+tags:
+  - name: user
+    description: Order related operations
+paths:
+  /:
+    post:
+      tags:
+        - order
+      summary: Create order
+      description: This can only be done by the logged in user.
+      operationId: createOrder
+      responses:
+        '201':
+          description: order response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+            examples:
+              sample-user:
+                summary: Example
+                value:
+                  userName: johndoe5891
+                  password: pwdpwd
+                  name:
+                    givenName: John
+                    familyName: Doe
+                  emails:
+                    - value: bestjohn@doe.com
+                      primary: true
+                  phoneNumbers:
+                    - value: '+71002003040'
+
+        description: Created user object
+        required: true
+  /{orderId}:
+    parameters:
+      - name: orderId
+        in: path
+        description: ID of the order
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags:
+        - order
+      description: Returns an order with given ID, if an user does not have access to the order
+      operationId: findOrderById
+      responses:
+        '200':
+          description: order response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - order
+      description: Deletes a single order with given ID
+      operationId: deleteOrder
+      responses:
+        '204':
+          description: order deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - order
+      description: Update order with given ID
+      operationId: updateOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+            examples:
+              sample-user:
+                summary: Example
+                value:
+                  name:
+                    givenName: Julie
+                    familyName: Doe
+                  emails:
+                    - value: bestjohn@doe1.com
+                      primary: true
+                  phoneNumbers:
+                    - value: '+71004242424'
+
+      responses:
+        '200':
+          description: user updated
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        password:
+          tokenUrl: http://localhost:8090/oauth/token
+          scopes:
+            read: Grants read access
+            write: Grants write access
+            uaa.admin: Grants read and write access to administrative information
+  schemas:
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              name:
+                type: string
+                maxLength: 256
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+
+  requestBodies:
+    OrderArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Order'
+      description: List of order object
+      required: true
+
+security:
+  - OAuth2:
+      - uaa.admin

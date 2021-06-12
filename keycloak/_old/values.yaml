@@ -1,0 +1,21 @@
+image:
+  repository: exxbrain/arch-keycloak
+  tag: "1.0"
+  pullPolicy: IfNotPresent
+
+serviceMonitor:
+  enabled: true
+
+extraEnv: |
+  - name: KEYCLOAK_IMPORT
+    value: /realm/realm.json
+  - name: KEYCLOAK_USER
+    value: admin
+  - name: KEYCLOAK_PASSWORD
+    value: admin
+  - name: PROXY_ADDRESS_FORWARDING
+    value: "true"
+  - name: KEYCLOAK_LOGLEVEL
+    value: DEBUG
+  - name: ROOT_LOGLEVEL
+    value: DEBUG

@@ -2,6 +2,8 @@ plugins {
     id 'org.springframework.boot' version '2.5.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'com.google.cloud.tools.jib' version '3.0.0'
+    id "org.flywaydb.flyway" version "7.10.0"
 }
 
 group = 'com.exxbrain'
@@ -25,14 +27,21 @@ ext {
 }
 
 dependencies {
+    implementation (group: 'org.axonframework', name: 'axon-spring-boot-starter', version: '4.5.1') {
+        exclude module: 'axon-server-connector'
+    }
     implementation "org.springframework.boot:spring-boot-starter-web"
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.cloud:spring-cloud-sleuth-zipkin'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation "org.flywaydb:flyway-core:7.10.0"
+    runtimeOnly 'org.postgresql:postgresql'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.axonframework:axon-test:4.5.1'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

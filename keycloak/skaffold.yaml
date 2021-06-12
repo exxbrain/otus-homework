@@ -1,0 +1,11 @@
+apiVersion: skaffold/v2beta9
+kind: Config
+metadata:
+  name: keycloak
+deploy:
+  helm:
+    releases:
+      - name: keycloak
+        namespace: app
+        createNamespace: true
+        chartPath: ../helm-charts/charts/keycloak

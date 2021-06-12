@@ -1,0 +1,18 @@
+apiVersion: skaffold/v2beta9
+kind: Config
+metadata:
+  name: uaa
+build:
+  artifacts:
+    - image: uaa
+  local: {}
+deploy:
+  helm:
+    releases:
+      - name: uaa
+        namespace: app
+        createNamespace: true
+        chartPath: ../helm-charts/charts/uaa
+        artifactOverrides:
+          image:
+            name: uaa

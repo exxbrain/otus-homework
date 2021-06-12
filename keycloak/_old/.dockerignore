@@ -1,0 +1,15 @@
+# Ignore everything
+**
+
+!registration-provider/
+registration-provider/build
+registration-provider/.gradle
+
+!kafka-listener-provider-ear
+kafka-listener-provider-ear/build
+kafka-listener-provider-ear/.gradle
+kafka-listener-provider-ear/kafka-listener-provider/build
+kafka-listener-provider-ear/kafka-listener-provider/.gradle
+
+!realm.json
+!profile.properties

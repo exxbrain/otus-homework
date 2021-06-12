@@ -1,0 +1,8 @@
+fullnameOverride: keycloak
+replicas: 1
+ingress:
+  enabled: true
+  hosts:
+    - host: arch.homework
+      paths:
+      - /otus/dzakharov/auth

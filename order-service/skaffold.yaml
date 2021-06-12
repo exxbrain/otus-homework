@@ -4,8 +4,15 @@ metadata:
   name: order-service
 build:
   artifacts:
-  - image: exxbrain/order-service
+  - image: order-service
+    jib: {}
 deploy:
-  kubectl:
-    manifests:
-    - k8s.yaml
+  helm:
+    releases:
+      - name: order-service
+        namespace: app
+        createNamespace: true
+        chartPath: ../helm-charts/charts/order-service
+        artifactOverrides:
+          image:
+            name: order-service

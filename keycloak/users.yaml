@@ -1,0 +1,326 @@
+openapi: 3.0.2
+info:
+  description: |
+    This is simple client API
+  version: "1.0.0"
+  title: User Service
+  contact:
+    email: exxbrain@gmail.com
+servers:
+  - description: Localhost
+    url: http://localhost:8090
+  - description: K8S
+    url: http://arch.homework/otusapp/dzakharov/auth
+  - description: SwaggerHub API Auto Mocking
+    url: https://08cb70ab-82ba-46ab-bf3c-a8d424f3cc7d.mock.pstmn.io
+tags:
+  - name: user
+    description: Operations about user
+paths:
+  /{realm}/users:
+    post:
+      tags:
+        - Users
+      summary: Create a new user   Username must be unique.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRepresentation'
+            examples:
+              sample-user:
+                summary: Example
+                value:
+                  userName: johndoe5891
+                  password: pwdpwd
+                  name:
+                    givenName: John
+                    familyName: Doe
+                  emails:
+                    - value: bestjohn@doe.com
+                      primary: true
+                  phoneNumbers:
+                    - value: '+71002003040'
+        required: true
+      responses:
+        2XX:
+          description: success
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+        - in: path
+          name: realm
+          description: realm name (not id!)
+          required: true
+          schema:
+            type: string
+            description: Created user object
+            required: true
+  /user/{user-id}:
+    parameters:
+      - name: user-id
+        in: path
+        description: ID of user
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags:
+        - user
+      description: Returns a user based on a single ID, if the user does not have access to the user
+      operationId: find user by id
+      responses:
+        '200':
+          description: user response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - user
+      description: deletes a single user based on the ID supplied
+      operationId: deleteUser
+      responses:
+        '204':
+          description: user deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - user
+      description: Update user with User ID supplied
+      operationId: updateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            examples:
+              sample-user:
+                summary: Example
+                value:
+                  name:
+                    givenName: Julie
+                    familyName: Doe
+                  emails:
+                    - value: bestjohn@doe1.com
+                      primary: true
+                  phoneNumbers:
+                    - value: '+71004242424'
+
+      responses:
+        '200':
+          description: user updated
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        password:
+          tokenUrl: {base-url}/{realm}/protocol/openid-connect/token
+          scopes:
+            admin: Grants read and write access to administrative information
+  schemas:
+    UserRepresentation:
+      type: object
+      properties:
+        access:
+          type: object
+          additionalProperties: true
+        attributes:
+          type: object
+          additionalProperties: true
+        clientConsents:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserConsentRepresentation'
+        clientRoles:
+          type: object
+          additionalProperties: true
+        createdTimestamp:
+          type: integer
+          format: int64
+        credentials:
+          type: array
+          items:
+            $ref: '#/components/schemas/CredentialRepresentation'
+        disableableCredentialTypes:
+          type: array
+          items:
+            type: string
+        email:
+          type: string
+        emailVerified:
+          type: boolean
+        enabled:
+          type: boolean
+        federatedIdentities:
+          type: array
+          items:
+            $ref: '#/components/schemas/FederatedIdentityRepresentation'
+        federationLink:
+          type: string
+        firstName:
+          type: string
+        groups:
+          type: array
+          items:
+            type: string
+        id:
+          type: string
+        lastName:
+          type: string
+        notBefore:
+          type: integer
+          format: int32
+        origin:
+          type: string
+        realmRoles:
+          type: array
+          items:
+            type: string
+        requiredActions:
+          type: array
+          items:
+            type: string
+        self:
+          type: string
+        serviceAccountClientId:
+          type: string
+        username:
+          type: string
+    UserConsentRepresentation:
+      type: object
+      properties:
+        clientId:
+          type: string
+        createdDate:
+          type: integer
+          format: int64
+        grantedClientScopes:
+          type: array
+          items:
+            type: string
+        lastUpdatedDate:
+          type: integer
+          format: int64
+    CredentialRepresentation:
+      type: object
+      properties:
+        createdDate:
+          type: integer
+          format: int64
+        credentialData:
+          type: string
+        id:
+          type: string
+        priority:
+          type: integer
+          format: int32
+        secretData:
+          type: string
+        temporary:
+          type: boolean
+        type:
+          type: string
+        userLabel:
+          type: string
+        value:
+          type: string
+    FederatedIdentityRepresentation:
+      type: object
+      properties:
+        identityProvider:
+          type: string
+        userId:
+          type: string
+        userName:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userName:
+          type: string
+          maxLength: 256
+        password:
+          type: string
+          format: password
+        name:
+          type: object
+          properties:
+            givenName:
+              type: string
+              maxLength: 256
+            familyName:
+              type: string
+              maxLength: 256
+        emails:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                format: email
+              primary:
+                type: boolean
+        phoneNumbers:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                format: phone
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+
+  requestBodies:
+    UserArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+      description: List of user object
+      required: true
+
+security:
+  - OAuth2:
+      - admin

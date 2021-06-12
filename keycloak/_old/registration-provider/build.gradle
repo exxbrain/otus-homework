@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+group 'com.exxbrain'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation('org.keycloak:keycloak-core:11.0.3')
+    implementation('org.keycloak:keycloak-server-spi:11.0.3')
+    implementation('org.keycloak:keycloak-server-spi-private:11.0.3')
+    implementation('org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec:2.0.1.Final')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

@@ -1,0 +1,28 @@
+{
+  "id": "arch",
+  "realm": "arch",
+  "registrationAllowed": true,
+  "sslRequired": "none",
+  "enabled": true,
+  "attributes": {
+    "frontendUrl": "http://arch.homework/otus/dzakharov"
+  },
+  "eventsListeners": [
+    "jboss-logging"
+  ],
+  "clients": [
+    {
+      "clientId": "gateway",
+      "enabled": true,
+      "publicClient": true,
+      "fullScopeAllowed": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [
+        "*"
+      ]
+    }
+  ]
+}

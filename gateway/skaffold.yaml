@@ -1,11 +1,18 @@
 apiVersion: skaffold/v2beta9
 kind: Config
 metadata:
-  name: api-gateway
+  name: gateway
 build:
   artifacts:
-  - image: exxbrain/api-gateway
+    - image: exxbrain-demo/gateway
+      jib: {}
 deploy:
-  kubectl:
-    manifests:
-    - k8s.yaml
+  helm:
+    releases:
+      - name: gateway
+        namespace: app
+        createNamespace: true
+        chartPath: ../helm-charts/charts/gateway
+        artifactOverrides:
+          image:
+            name: exxbrain-demo/gateway

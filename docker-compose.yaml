@@ -2,18 +2,34 @@ version: '2'
 
 services:
 
+  keycloak:
+    image: jboss/keycloak
+    container_name: keycloak
+    ports:
+      - "8090:8080"
+      - "9990:9990"
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      DB_VENDOR: postgres
+      DB_ADDR: host.docker.internal
+      DB_PORT: 5432
+      DB_DATABASE: keycloak
+      DB_USER: postgres
+      DB_PASSWORD: "12345"
+
   uaa:
-    image: cloudfoundry/uaa:75.1.0
+    image: uaa
+    build:
+      context: uaa-server
     container_name: uaa
-    depends_on:
-      - postgres
     ports:
       - "8090:8080"
     environment:
       UAA_CONFIG_PATH: /uaa
       spring_profiles: default,postgresql
-    volumes:
-      - ./uaa-server/uaa.yml:/uaa/uaa.yml
+      DATABASE_URI: jdbc:postgresql://host.docker.internal:5432/uaa?user=postgres&password=12345
+      ISSUER_URI: http://localhost:8090/otus/dzkaharov
 
   postgres:
     container_name: postgres
@@ -26,4 +42,23 @@ services:
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: '12345'
+
+  order-service:
+    build: order-service
+    container_name: order-service
+    depends_on:
+      - uaa
+      - postgres
+    restart: always
+    ports:
+      - '8080:8090'
+
+  api-gateway:
+    build: order-service
+    container_name: order-service
+    depends_on:
+      - uaa
+    restart: always
+    ports:
+      - '8082:8090'
 #
