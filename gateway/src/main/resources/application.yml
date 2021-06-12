@@ -32,7 +32,7 @@ management:
 spring:
 
   config:
-    import: "file:${CONFIG_FILE:/config/routes.yaml}"
+    import: "file:${ROUTES_FILE:/config/routes.yaml}"
 
   application:
     name: gateway
@@ -41,7 +41,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: "${ISSUER_URL}/realms/arch"
+          issuer-uri: "${ISSUER_URL:${AUTH_URL}}/realms/arch"
           jwk-set-uri: "${AUTH_URL}/realms/arch/protocol/openid-connect/certs"
       client:
         registration:
