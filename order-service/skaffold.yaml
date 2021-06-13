@@ -13,7 +13,6 @@ deploy:
         chartPath: ../helm-charts/charts/order-service
         setValues:
           authUrl: http://keycloak-http/otusapp/dzakharov/auth
-          discoveryService: discovery-service
           issuerUrl: http://arch.homework/otusapp/dzakharov
           dbUrl: jdbc:postgresql://postgres:5432/order_service?user=postgres&password=12345
           postgresql:
