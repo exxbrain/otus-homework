@@ -310,6 +310,16 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -329,6 +339,16 @@
 		{
 			"name": "Remove item",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [],
 				"body": {
@@ -358,6 +378,16 @@
 		{
 			"name": "Cancel Order",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [],
 				"body": {
@@ -398,6 +428,16 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -425,6 +465,16 @@
 		{
 			"name": "Confirm Order",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [],
 				"body": {
@@ -652,66 +702,66 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"pm.sendRequest({",
-					"    method: 'POST',",
-					"    url: pm.collectionVariables.get(\"baseUrl\") + '/auth/realms/master/protocol/openid-connect/token',",
+					"// pm.sendRequest({",
+					"//     method: 'POST',",
+					"//     url: pm.collectionVariables.get(\"baseUrl\") + '/auth/realms/master/protocol/openid-connect/token',",
 					"    ",
-					"    body: {",
-					"        mode: 'urlencoded',",
-					"        urlencoded: [",
-					"            {key: \"grant_type\", value: \"password\", disabled: false},",
-					"            {key: \"username\", value: \"adm\", disabled: false},",
-					"            {key: \"password\", value: \"adm\", disabled: false},",
-					"            {key: \"scope\", value: \"email profile\", disabled: false},",
-					"            {key: \"client_id\", value: \"admin-cli\", disabled: false},",
-					"            {key: \"client_secret\", value: \"secret\", disabled: false}",
-					"        ]",
-					"    }",
-					"}, (err, response) => {",
-					"    const jsonResponse = response.json();",
-					"    const newAccessToken = jsonResponse.access_token;",
-					"    pm.collectionVariables.set('authServerAdminToken', newAccessToken);",
-					"});",
+					"//     body: {",
+					"//         mode: 'urlencoded',",
+					"//         urlencoded: [",
+					"//             {key: \"grant_type\", value: \"password\", disabled: false},",
+					"//             {key: \"username\", value: \"adm\", disabled: false},",
+					"//             {key: \"password\", value: \"adm\", disabled: false},",
+					"//             {key: \"scope\", value: \"email profile\", disabled: false},",
+					"//             {key: \"client_id\", value: \"admin-cli\", disabled: false},",
+					"//             {key: \"client_secret\", value: \"secret\", disabled: false}",
+					"//         ]",
+					"//     }",
+					"// }, (err, response) => {",
+					"//     const jsonResponse = response.json();",
+					"//     const newAccessToken = jsonResponse.access_token;",
+					"//     pm.collectionVariables.set('authServerAdminToken', newAccessToken);",
+					"// });",
 					"",
-					"pm.sendRequest({",
-					"    method: 'POST',",
-					"    url: pm.collectionVariables.get(\"baseUrl\") + '/auth/realms/arch/protocol/openid-connect/token',",
+					"// pm.sendRequest({",
+					"//     method: 'POST',",
+					"//     url: pm.collectionVariables.get(\"baseUrl\") + '/auth/realms/arch/protocol/openid-connect/token',",
 					"    ",
-					"    body: {",
-					"        mode: 'urlencoded',",
-					"        urlencoded: [",
-					"            {key: \"grant_type\", value: \"password\", disabled: false},",
-					"            {key: \"username\", value: pm.collectionVariables.get(\"adminUsername\"), disabled: false},",
-					"            {key: \"password\", value: pm.collectionVariables.get(\"adminPassword\"), disabled: false},",
-					"            {key: \"scope\", value: \"email profile\", disabled: false},",
-					"            {key: \"client_id\", value: \"gateway\", disabled: false},",
-					"        ]",
-					"    }",
-					"}, (err, response) => {",
-					"    const jsonResponse = response.json();",
-					"    const newAccessToken = jsonResponse.access_token;",
-					"    pm.collectionVariables.set('adminToken', newAccessToken);",
-					"});",
+					"//     body: {",
+					"//         mode: 'urlencoded',",
+					"//         urlencoded: [",
+					"//             {key: \"grant_type\", value: \"password\", disabled: false},",
+					"//             {key: \"username\", value: pm.collectionVariables.get(\"adminUsername\"), disabled: false},",
+					"//             {key: \"password\", value: pm.collectionVariables.get(\"adminPassword\"), disabled: false},",
+					"//             {key: \"scope\", value: \"email profile\", disabled: false},",
+					"//             {key: \"client_id\", value: \"gateway\", disabled: false},",
+					"//         ]",
+					"//     }",
+					"// }, (err, response) => {",
+					"//     const jsonResponse = response.json();",
+					"//     const newAccessToken = jsonResponse.access_token;",
+					"//     pm.collectionVariables.set('adminToken', newAccessToken);",
+					"// });",
 					"",
-					"pm.sendRequest({",
-					"    method: 'POST',",
-					"    url: pm.collectionVariables.get(\"baseUrl\") + '/auth/realms/arch/protocol/openid-connect/token',",
+					"// pm.sendRequest({",
+					"//     method: 'POST',",
+					"//     url: pm.collectionVariables.get(\"baseUrl\") + '/auth/realms/arch/protocol/openid-connect/token',",
 					"    ",
-					"    body: {",
-					"        mode: 'urlencoded',",
-					"        urlencoded: [",
-					"            {key: \"grant_type\", value: \"password\", disabled: false},",
-					"            {key: \"username\", value: pm.collectionVariables.get(\"userUsername\"), disabled: false},",
-					"            {key: \"password\", value: pm.collectionVariables.get(\"userPassword\"), disabled: false},",
-					"            {key: \"scope\", value: \"email profile\", disabled: false},",
-					"            {key: \"client_id\", value: \"gateway\", disabled: false},",
-					"        ]",
-					"    }",
-					"}, (err, response) => {",
-					"    const jsonResponse = response.json();",
-					"    const newAccessToken = jsonResponse.access_token;",
-					"    pm.collectionVariables.set('userToken', newAccessToken);",
-					"});"
+					"//     body: {",
+					"//         mode: 'urlencoded',",
+					"//         urlencoded: [",
+					"//             {key: \"grant_type\", value: \"password\", disabled: false},",
+					"//             {key: \"username\", value: pm.collectionVariables.get(\"userUsername\"), disabled: false},",
+					"//             {key: \"password\", value: pm.collectionVariables.get(\"userPassword\"), disabled: false},",
+					"//             {key: \"scope\", value: \"email profile\", disabled: false},",
+					"//             {key: \"client_id\", value: \"gateway\", disabled: false},",
+					"//         ]",
+					"//     }",
+					"// }, (err, response) => {",
+					"//     const jsonResponse = response.json();",
+					"//     const newAccessToken = jsonResponse.access_token;",
+					"//     pm.collectionVariables.set('userToken', newAccessToken);",
+					"// });"
 				]
 			}
 		},
