@@ -1,0 +1,16 @@
+apiVersion: skaffold/v2beta9
+kind: Config
+metadata:
+  name: discovery-service
+build:
+  artifacts:
+    - image: discovery-service
+      jib: {}
+deploy:
+  helm:
+    releases:
+      - name: discovery-service
+        chartPath: ../helm-charts/charts/discovery-service
+        artifactOverrides:
+          image:
+            name: discovery-service

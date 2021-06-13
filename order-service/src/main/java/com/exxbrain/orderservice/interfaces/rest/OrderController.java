@@ -25,7 +25,7 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 public class OrderController {
     private final CommandGateway commandGateway;
     private final QueryGateway queryGateway;

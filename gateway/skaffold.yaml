@@ -10,9 +10,11 @@ deploy:
   helm:
     releases:
       - name: gateway
-        namespace: app
-        createNamespace: true
         chartPath: ../helm-charts/charts/gateway
+        setValues:
+          authUrl: http://keycloak-http/otusapp/dzakharov/auth
+          discoveryService: discovery-service
+          issuerUrl: http://arch.homework/otusapp/dzakharov
         artifactOverrides:
           image:
             name: exxbrain/otus-gateway

@@ -14,4 +14,4 @@ spring:
         - id: orders
           uri: "lb://order-service"
           predicates:
-            - Path=/orders/**
+            - Path=/api/orders/**
