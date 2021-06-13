@@ -279,13 +279,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/orders",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/api/orders",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8081",
 					"path": [
+						"api",
 						"orders"
 					]
 				}
@@ -314,13 +313,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/orders/{{orderId}}",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/api/orders/{{orderId}}",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8081",
 					"path": [
+						"api",
 						"orders",
 						"{{orderId}}"
 					]
@@ -343,13 +341,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/orders/{{orderId}}/removeItem",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/api/orders/{{orderId}}/removeItem",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8081",
 					"path": [
+						"api",
 						"orders",
 						"{{orderId}}",
 						"removeItem"
@@ -373,13 +370,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/orders/{{orderId}}/cancel",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/api/orders/{{orderId}}/cancel",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8081",
 					"path": [
+						"api",
 						"orders",
 						"{{orderId}}",
 						"cancel"
@@ -414,13 +410,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/orders",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/api/orders",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8081",
 					"path": [
+						"api",
 						"orders"
 					]
 				}
@@ -442,13 +437,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/orders/{{orderId}}/confirm",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/api/orders/{{orderId}}/confirm",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8081",
 					"path": [
+						"api",
 						"orders",
 						"{{orderId}}",
 						"confirm"
@@ -473,13 +467,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8082/orders",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/api/orders",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8082",
 					"path": [
+						"api",
 						"orders"
 					]
 				}
@@ -489,16 +482,25 @@
 		{
 			"name": "Get Orders Sorded By Total ASC",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{adminToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/orders/?sort=total",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/api/orders/?sort=total",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8081",
 					"path": [
+						"api",
 						"orders",
 						""
 					],
@@ -515,16 +517,25 @@
 		{
 			"name": "Get Orders Sorded By Total DESC",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{adminToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/orders/?sort=total,DESC",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/api/orders/?sort=total,DESC",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8081",
 					"path": [
+						"api",
 						"orders",
 						""
 					],
@@ -541,16 +552,25 @@
 		{
 			"name": "Get Cancelled Orders Sorded By Total",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{adminToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/orders/?sort=total&state=CANCELLED",
-					"protocol": "http",
+					"raw": "{{baseUrl}}/api/orders/?sort=total&state=CANCELLED",
 					"host": [
-						"localhost"
+						"{{baseUrl}}"
 					],
-					"port": "8081",
 					"path": [
+						"api",
 						"orders",
 						""
 					],
