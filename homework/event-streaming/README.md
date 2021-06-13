@@ -1,16 +1,11 @@
-# Event sourcing
+# Event streaming
 
-Работа выполнена с использованием Axon Framework https://axoniq.io.
-Хранилищем событий является база данных postgres. Используется та же, что и для хранения представлений.
-
-Ниже представлена схема работы
-
-![Event Sourcing](event-sourcing.png)
+```mermaid
+sequenceDiagram
+    Alice->>John: Hello John, how are you?
+    John-->>Alice: Great!
+    Alice-)John: See you later!
+```
 
 ```shell
-helm repo add exxbrain https://exxbrain.github.io/helm-charts
-helm repo update
-kubectl create namespace dzakharov
-helm install app exxbrain/event-sourcing -n=dzakharov
-newman run event-sourcing.postman_collection.json
 ```
