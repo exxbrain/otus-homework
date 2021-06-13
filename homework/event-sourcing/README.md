@@ -3,6 +3,10 @@
 Работа выполнена с использованием Axon Framework https://axoniq.io.
 Хранилищем событий является база данных postgres. Используется та же, что и для хранения представлений.
 
+Ниже представлена схема работы
+
+![Event Sourcing](event-sourcing.png)
+
 ```shell
 helm repo add exxbrain https://exxbrain.github.io/helm-charts
 helm repo update
