@@ -1,9 +1,13 @@
 # Stream processing
 
 ### Open API:
-* [Order service api](order-service-api.yaml)
-* [Billing service api](billing-service-api.yaml)
+* [Order service api](order-service-api.yaml) (https://app.swaggerhub.com/apis/exxbrain/order_service/1.0.0)
+* [Billing service api](billing-service-api.yaml) (https://app.swaggerhub.com/apis/exxbrain2/billing_service/1.0.0)
 
-Cобытийное взаимодействие с использование брокера сообщений для нотификаций (уведомлений).
+1. Поскольку сервис order-service реализован с использованием принципа event-sourcing, то имеет смысл воспользоваться Event Collaboration, поскольку у нас уже есть необходое событие Order Confirmed. Схема Event Collaboration: 
+
+![Secuence](sequence-broker.png)
+
+2. Схема событийного взаимодействие с использование брокера сообщений для нотификаций (уведомлений). Приводится для того, чтобы просто посмотреть:
 
 ![Secuence](sequence.png)
