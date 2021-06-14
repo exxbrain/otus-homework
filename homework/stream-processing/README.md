@@ -2,6 +2,7 @@
 
 ### Open API:
 * [Order service api](order-service-api.yaml)
+* [Billing service api](billing-service-api.yaml)
 
 Cобытийное взаимодействие с использование брокера сообщений для нотификаций (уведомлений).
 

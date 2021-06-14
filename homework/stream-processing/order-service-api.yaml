@@ -1,0 +1,204 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/exxbrain/order_service/1.0.0
+info:
+  description: This is the Order Service API
+  version: "1.0.0"
+  title: Order Service API
+  contact:
+    email: exxbrain@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: admins
+    description: Admin-only calls
+  - name: users
+    description: Operations available to regular users
+paths:
+  /api/orders:
+    get:
+      tags:
+        - admins
+      summary: searches orders
+      operationId: listOrders
+      description: |
+        By passing in the appropriate options, you can search for
+        available orders in the system
+      parameters:
+        - in: query
+          name: state
+          description: pass an optional search string for looking up orders
+          required: false
+          schema:
+            $ref: '#/components/schemas/OrderState'
+        - in: query
+          name: sort
+          description: pass a string for sorting orders
+          schema:
+            $ref: '#/components/schemas/SortOrdersBy'
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '400':
+          description: bad input parameter
+    post:
+      tags:
+        - users
+      summary: places an order
+      operationId: placeOrder
+      description: plase an order to the system
+      responses:
+        '201':
+          description: order created
+        '400':
+          description: 'invalid input, object invalid'
+        '409':
+          description: an existing order already exists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+        description: Order to add
+  /api/orders/{orderId}/{productId}:
+    delete:
+      tags:
+        - users
+      summary: removes an item from order
+      operationId: removeItem
+      description: |
+        By passing in productId, you can remove item from order
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: productId
+          in: path
+          description: ID of product
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: remove item command sent
+        '400':
+          description: 'invalid input, object invalid'
+  /api/orders/{orderId}/cancel:
+    put:
+      tags:
+        - users
+      summary: cancels order
+      operationId: cancelOrder
+      description: Cancels order
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: cancel order command sent
+        '400':
+          description: 'invalid input, object invalid'
+  /api/orders/{orderId}/confirm:
+    put:
+      tags:
+        - users
+      summary: confirms order
+      operationId: confirmOrder
+      description: Confirms order
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: confirm order command sent
+        '400':
+          description: 'invalid input, object invalid'
+components:
+  schemas:
+    OrderState:
+      type: string
+      enum:
+        - CANCELLED
+        - CREATED
+        - CONFIRMED
+    SortOrdersBy:
+      type: string
+      enum:
+        - total
+        - createdAt
+        - total,DESC
+        - createdAt,DESC
+      default: createdAt,DESC
+    Order:
+      type: object
+      required:
+        - id
+        - customerId
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        customerId:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        state:
+          $ref: '#/components/schemas/OrderState'
+        total:
+          type: number
+          format: decimal
+          example: 99.95
+        createdAt:
+          type: string
+          format: date-time
+          example: 2021-06-14T08:18:57.785+00:00
+        orderItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+    OrderItem:
+      required:
+        - productId
+        - productName
+      properties:
+        productId:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        poductName:
+          type: string
+          example: 'Hat'
+        quantity:
+          type: integer
+          minimum: 1
+          example: 12
+        price:
+          type: number
+          format: decimal
+          example: 99.95
+      type: object
