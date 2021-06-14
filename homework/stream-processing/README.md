@@ -1,8 +1,8 @@
 # Stream processing
 
 ### Open API:
-* [Order service api](order-service-api.yaml) (https://app.swaggerhub.com/apis/exxbrain/order_service/1.0.0)
-* [Billing service api](billing-service-api.yaml) (https://app.swaggerhub.com/apis/exxbrain2/billing_service/1.0.0)
+* [Order service api](https://app.swaggerhub.com/apis/exxbrain/order_service/1.0.0)
+* [Billing service api](https://app.swaggerhub.com/apis/exxbrain2/billing_service/1.0.0)
 
 1. Поскольку сервис order-service реализован с использованием принципа event-sourcing, то имеет смысл воспользоваться Event Collaboration, поскольку у нас уже есть необходое событие Order Confirmed. Схема Event Collaboration: 
 
